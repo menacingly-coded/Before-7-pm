@@ -65,8 +65,20 @@ app.put('/students/:id', async (req, res) => {
   }
 });
 
-app.delete('/user', (req, res) => {
-  res.send('Got a DELETE request at /user')
-})
+app.delete('/students/:id', async (req, res) => {
+  try {
+    const studentId = req.params.id;
+
+    const deletedStudent = await Student.findByIdAndDelete(studentId);
+
+    if (!deletedStudent) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    res.json({ message: 'Student deleted successfully', student: deletedStudent });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 
 app.listen(3000)

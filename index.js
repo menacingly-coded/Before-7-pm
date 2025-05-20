@@ -2,9 +2,14 @@ const express = require('express')
 const app = express()
 const port = 3000
 app.use(express.json())
+require('dotenv').config();
+const Student = require('./models/students');
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/studentDB')
+mongoose.connect('mongodb+srv://shreya0987edu:5nxsbQphHo9hefhk@cluster0.2raftwq.mongodb.net/studentDB', {
+  useNewUrlParser: "true",
+  useUnifiedTopology: "true"
+})
   .then(() => {
     console.log(" MongoDB connected successfully");
   })

@@ -1,10 +1,13 @@
-Student_Schema = {
-  name: { type: String, required: true},
-  age: Number,
-  branch: String,
-  course: String,
-  courses : { type :Number, required:true},
-  email: {type:String, unique:true},
-  college: { type:String, required: true},
-  Addmission :{ type: Date, required: true},
-}
+const mongoose = require('mongoose');
+
+const StudentSchema ={
+  name: { type: String, required: true, trim: true },
+  age: { type: Number, required: true },
+  branch: { type: String, required: true, enum: ['CSE', 'ECE', 'MECH', 'CIVIL'] },
+  course: { type: String, required: true, enum: ['B.Tech', 'M.Tech', 'B.Arch', 'M.Arch'] },
+  courses: { type: Number, required: true, min: 1, max: 10 },
+  email: { type: String, required: true, unique: true, lowercase: true },
+  college: { type: String, required: true },
+};
+
+module.exports = mongoose.model("Student", StudentSchema);

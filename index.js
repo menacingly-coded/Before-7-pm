@@ -1,15 +1,31 @@
 const express = require('express')
 const app = express()
 const port = 3000
+app.use(express.json())
+
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect('mongodb://127.0.0.1:27017/studentDB')
+  .then(() => {
+    console.log(" MongoDB connected successfully");
+  })
+  .catch((err) => {
+    console.error(" MongoDB connection error:", err);
+  });
+
+
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.post('/', (req, res) => {
-  res.send('Got a POST request')
+app.post('/students', async (req, res) => {
+  try{
+     const student = new Student(req.body);
+     await student.save();
+     res.status(201).send(student);
+  }catch (err) {
+    res.status(400).send(err);
+  }
 })
 
 app.put('/user', (req, res) => {

@@ -8,6 +8,7 @@ const StudentSchema ={
   courses: { type: Number, required: true },
   email: { type: String, required: true, unique: true },
   college: { type: String, required: true },
+  id:{type: Boolean, unique: true}
 };
 
 const student = mongoose.model('student', StudentSchema);

@@ -19,9 +19,15 @@ mongoose.connect('mongodb+srv://shreya0987edu:5nxsbQphHo9hefhk@cluster0.2raftwq.
 
 
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.get('/students', async (req, res) => {
+  try {
+    const students = await Student.find(); // get all students
+    res.status(200).send(students);
+  } catch (err) {
+    console.error('Error fetching students:', err);
+    res.status(500).send({ error: 'Something went wrong' });
+  }
+});
 
 app.post('/students', async (req, res) => {
   try{
@@ -33,9 +39,31 @@ app.post('/students', async (req, res) => {
   }
 })
 
-app.put('/user', (req, res) => {
-  res.send('Got a PUT request at /user')
-})
+app.put('/students/:id', async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    const updateData = req.body;
+
+    // Update student document by ID
+    const updatedStudent = await Student.findByIdAndUpdate(
+      studentId,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedStudent) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    res.json(updatedStudent);
+  } catch (error) {
+    // Handle duplicate email error
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 
 app.delete('/user', (req, res) => {
   res.send('Got a DELETE request at /user')
